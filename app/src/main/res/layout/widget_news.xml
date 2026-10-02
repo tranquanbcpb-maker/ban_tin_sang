@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_widget"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:id="@+id/widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="4dp"
+        android:paddingBottom="6dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/eyebrow"
+                android:textColor="@color/muted"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/fg"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/widget_refresh"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:padding="6dp"
+            android:contentDescription="@string/refresh"
+            android:src="@drawable/ic_refresh" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ListView
+            android:id="@+id/widget_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/line"
+            android:dividerHeight="1dp" />
+
+        <TextView
+            android:id="@+id/widget_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/widget_empty"
+            android:textColor="@color/muted" />
+    </FrameLayout>
+</LinearLayout>

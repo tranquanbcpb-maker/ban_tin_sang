@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bản tin</string>
+    <string name="widget_name">Bản tin Việt Nam và thế giới</string>
+    <string name="eyebrow">BẢN TIN</string>
+    <string name="tab_vn">Việt Nam</string>
+    <string name="tab_world">Thế giới</string>
+    <string name="refresh">Làm mới</string>
+    <string name="loading">Đang tải tin mới…</string>
+    <string name="offline">Không tải được tin. Kiểm tra kết nối mạng rồi bấm Làm mới.</string>
+    <string name="updated_at">Cập nhật lúc %1$s</string>
+    <string name="empty">Chưa có tin. Bấm Làm mới để tải.</string>
+    <string name="no_summary">Bài này không có tóm tắt. Bấm nút bên dưới để đọc bài gốc.</string>
+    <string name="read_original">Đọc bài gốc · %1$s ↗</string>
+    <string name="widget_empty">Đang tải tin…</string>
+    <string name="widget_desc">Tiêu đề tin mới từ VnExpress, Quân đội Nhân dân và Tuổi Trẻ</string>
+</resources>

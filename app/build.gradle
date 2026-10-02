@@ -1,0 +1,29 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'vn.bantinsang'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'vn.bantinsang'
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName '1.0'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            // Ký bằng khóa debug để file APK cài được ngay, không cần tạo khóa riêng.
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
