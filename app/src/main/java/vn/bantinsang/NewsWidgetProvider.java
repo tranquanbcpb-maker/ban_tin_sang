@@ -33,7 +33,8 @@ public class NewsWidgetProvider extends AppWidgetProvider {
             rv.setTextViewText(R.id.widget_date, d.substring(0, 1).toUpperCase(new Locale("vi", "VN")) + d.substring(1));
 
             // Chạm vào một tin: mở bài gốc trên trình duyệt.
-            Intent view = new Intent(Intent.ACTION_VIEW);
+            Intent view = new Intent(ctx, OpenLinkActivity.class);
+            view.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
             PendingIntent tmpl = PendingIntent.getActivity(ctx, 0, view,
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
             rv.setPendingIntentTemplate(R.id.widget_list, tmpl);

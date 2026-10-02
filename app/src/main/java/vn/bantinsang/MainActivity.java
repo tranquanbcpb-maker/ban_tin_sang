@@ -113,7 +113,12 @@ public class MainActivity extends Activity {
     private void updateWidgets() {
         AppWidgetManager m = AppWidgetManager.getInstance(this);
         int[] ids = m.getAppWidgetIds(new ComponentName(this, NewsWidgetProvider.class));
-        if (ids.length > 0) m.notifyAppWidgetViewDataChanged(ids, R.id.widget_list);
+        if (ids.length > 0) {
+            Intent u = new Intent(this, NewsWidgetProvider.class);
+            u.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            u.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            sendBroadcast(u);
+        }
     }
 
     private int accent() {

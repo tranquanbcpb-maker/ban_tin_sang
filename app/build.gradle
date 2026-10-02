@@ -10,15 +10,24 @@ android {
         applicationId 'vn.bantinsang'
         minSdk 26
         targetSdk 34
-        versionCode 1
-        versionName '1.0'
+        versionCode 2
+        versionName '1.1'
+    }
+
+    signingConfigs {
+        // Khóa ký cố định để các bản cập nhật cài đè được lên bản cũ.
+        fixed {
+            storeFile file('bantin.keystore')
+            storePassword 'bantinsang'
+            keyAlias 'bantin'
+            keyPassword 'bantinsang'
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            // Ký bằng khóa debug để file APK cài được ngay, không cần tạo khóa riêng.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.fixed
         }
     }
 

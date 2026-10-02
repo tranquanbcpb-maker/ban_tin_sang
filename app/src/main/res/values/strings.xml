@@ -12,6 +12,6 @@
     <string name="empty">Chưa có tin. Bấm Làm mới để tải.</string>
     <string name="no_summary">Bài này không có tóm tắt. Bấm nút bên dưới để đọc bài gốc.</string>
     <string name="read_original">Đọc bài gốc · %1$s ↗</string>
-    <string name="widget_empty">Đang tải tin…</string>
+    <string name="widget_empty">Chưa có tin. Bấm ↻ để tải, hoặc mở app Bản tin.</string>
     <string name="widget_desc">Tiêu đề tin mới từ VnExpress, Quân đội Nhân dân và Tuổi Trẻ</string>
 </resources>
