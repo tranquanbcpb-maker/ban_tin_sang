@@ -15,6 +15,6 @@
     <string name="widget_empty">Chưa có tin. Bấm ↻ để tải, hoặc mở app Bản tin.</string>
     <string name="widget_desc">Tiêu đề tin mới từ VnExpress, Quân đội Nhân dân và Tuổi Trẻ</string>
     <string name="flip_widget_name">Bản tin cuộn</string>
-    <string name="flip_widget_desc">Danh sách tin tự trôi lên từng dòng, 3 giây một lần</string>
+    <string name="flip_widget_desc">Danh sách tin tự trôi lên từng dòng, 5 giây một lần</string>
     <string name="flip_header">BẢN TIN · TỰ CUỘN</string>
 </resources>
