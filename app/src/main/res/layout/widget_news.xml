@@ -7,35 +7,33 @@
     android:padding="12dp">
 
     <LinearLayout
-        android:id="@+id/widget_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingStart="4dp"
-        android:paddingBottom="6dp">
+        android:gravity="center_vertical">
 
         <LinearLayout
+            android:id="@+id/widget_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/eyebrow"
-                android:textColor="@color/muted"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:id="@+id/widget_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/fg"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/widget_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:textColor="@color/muted"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <ImageView
@@ -47,24 +45,11 @@
             android:src="@drawable/ic_refresh" />
     </LinearLayout>
 
-    <FrameLayout
+    <LinearLayout
+        android:id="@+id/widget_rows"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <ListView
-            android:id="@+id/widget_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/line"
-            android:dividerHeight="1dp" />
-
-        <TextView
-            android:id="@+id/widget_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/widget_empty"
-            android:textColor="@color/muted" />
-    </FrameLayout>
+        android:layout_weight="1"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical" />
 </LinearLayout>

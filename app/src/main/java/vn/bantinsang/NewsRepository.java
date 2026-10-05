@@ -73,13 +73,16 @@ public class NewsRepository {
         return all;
     }
 
+    /** Lỗi gần nhất khi tải tin, để hiện cho người dùng biết. */
+    public static volatile String lastError = null;
+
     static List<NewsItem> fetchFeed(Feed feed) {
         List<NewsItem> out = new ArrayList<>();
         HttpURLConnection c = null;
         try {
             c = (HttpURLConnection) new URL(feed.url).openConnection();
-            c.setConnectTimeout(10000);
-            c.setReadTimeout(15000);
+            c.setConnectTimeout(6000);
+            c.setReadTimeout(8000);
             c.setRequestProperty("User-Agent", "Mozilla/5.0 (Linux; Android 14) BanTinSang/1.0");
             c.setInstanceFollowRedirects(true);
             try (InputStream in = c.getInputStream()) {
@@ -120,7 +123,8 @@ public class NewsRepository {
                     ev = p.next();
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            lastError = e.getClass().getSimpleName() + ": " + e.getMessage();
         } finally {
             if (c != null) c.disconnect();
         }

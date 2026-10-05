@@ -84,6 +84,7 @@ public class MainActivity extends Activity {
         progress.setVisibility(View.VISIBLE);
         status.setText(R.string.loading);
         bg.execute(() -> {
+            NewsRepository.lastError = null;
             List<NewsItem> vn = NewsRepository.fetch(NewsRepository.VN);
             List<NewsItem> world = NewsRepository.fetch(NewsRepository.WORLD);
             NewsRepository.save(this, NewsRepository.VN, vn);
@@ -93,7 +94,8 @@ public class MainActivity extends Activity {
                 if (!vn.isEmpty()) data.set(NewsRepository.VN, vn);
                 if (!world.isEmpty()) data.set(NewsRepository.WORLD, world);
                 if (vn.isEmpty() && world.isEmpty()) {
-                    status.setText(R.string.offline);
+                    String err = NewsRepository.lastError;
+                    status.setText(getString(R.string.offline) + (err != null ? "\n(" + err + ")" : ""));
                 } else {
                     status.setText(getString(R.string.updated_at,
                             new SimpleDateFormat("HH:mm", Locale.US).format(new Date())));
@@ -111,16 +113,8 @@ public class MainActivity extends Activity {
     }
 
     private void updateWidgets() {
-        AppWidgetManager m = AppWidgetManager.getInstance(this);
-        Class<?>[] providers = {NewsWidgetProvider.class, FlipWidgetProvider.class};
-        for (Class<?> p : providers) {
-            int[] ids = m.getAppWidgetIds(new ComponentName(this, p));
-            if (ids.length == 0) continue;
-            Intent u = new Intent(this, p);
-            u.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            u.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-            sendBroadcast(u);
-        }
+        WidgetUpdater.setStatus(this, null);
+        WidgetUpdater.renderAll(this);
     }
 
     private int accent() {

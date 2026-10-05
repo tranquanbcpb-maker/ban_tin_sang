@@ -4,8 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/bg_widget"
-    android:paddingStart="14dp"
-    android:paddingEnd="8dp"
+    android:paddingLeft="14dp"
+    android:paddingRight="8dp"
     android:paddingTop="8dp"
     android:paddingBottom="10dp">
 
@@ -15,15 +15,31 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/flip_header"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/flip_header"
-            android:textColor="@color/muted"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.08" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/flip_header"
+                android:textColor="@color/muted"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/flip_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/muted"
+                android:textSize="11sp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/flip_refresh"
@@ -34,28 +50,13 @@
             android:src="@drawable/ic_refresh" />
     </LinearLayout>
 
-    <FrameLayout
+    <ViewFlipper
+        android:id="@+id/flipper"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <AdapterViewFlipper
-            android:id="@+id/flipper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:autoStart="true"
-            android:flipInterval="4000"
-            android:loopViews="true"
-            android:inAnimation="@animator/flip_in"
-            android:outAnimation="@animator/flip_out" />
-
-        <TextView
-            android:id="@+id/flip_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/widget_empty"
-            android:textColor="@color/muted"
-            android:textSize="14sp" />
-    </FrameLayout>
+        android:layout_weight="1"
+        android:autoStart="true"
+        android:flipInterval="4000"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out" />
 </LinearLayout>
