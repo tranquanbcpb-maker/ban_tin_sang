@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_flip"
+    android:clipToOutline="true">
+
+    <AdapterViewFlipper
+        android:id="@+id/flipper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:autoStart="true"
+        android:flipInterval="4000"
+        android:loopViews="true"
+        android:inAnimation="@animator/flip_in"
+        android:outAnimation="@animator/flip_out" />
+
+    <TextView
+        android:id="@+id/flip_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/widget_empty"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/flip_refresh"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:padding="6dp"
+        android:background="@drawable/bg_round_btn"
+        android:contentDescription="@string/refresh"
+        android:src="@drawable/ic_refresh_white" />
+</FrameLayout>

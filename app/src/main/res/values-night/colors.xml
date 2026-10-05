@@ -9,4 +9,6 @@
     <color name="vn">#F06A5F</color>
     <color name="world">#6FB2E0</color>
     <color name="on_accent">#111513</color>
+    <color name="vn_flip">#C8322B</color>
+    <color name="world_flip">#1F5F8B</color>
 </resources>

@@ -13,9 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsWidgetService extends RemoteViewsService {
+    public static final String EXTRA_FLIP = "flip";
+
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new Factory(getApplicationContext());
+        return new Factory(getApplicationContext(), intent.getBooleanExtra(EXTRA_FLIP, false));
     }
 
     static class Row {
@@ -26,8 +28,9 @@ public class NewsWidgetService extends RemoteViewsService {
     static class Factory implements RemoteViewsFactory {
         private final Context ctx;
         private final List<Row> rows = new ArrayList<>();
+        private final boolean flip;
 
-        Factory(Context ctx) { this.ctx = ctx; }
+        Factory(Context ctx, boolean flip) { this.ctx = ctx; this.flip = flip; }
 
         @Override public void onCreate() { }
 
@@ -52,7 +55,8 @@ public class NewsWidgetService extends RemoteViewsService {
             rows.clear();
             // Xen kẽ: 2 tin Việt Nam, 1 tin thế giới.
             int i = 0, j = 0;
-            while (rows.size() < 15 && (i < vn.size() || j < world.size())) {
+            int max = flip ? 12 : 15;
+            while (rows.size() < max && (i < vn.size() || j < world.size())) {
                 for (int k = 0; k < 2 && i < vn.size(); k++) { Row r = new Row(); r.item = vn.get(i++); rows.add(r); }
                 if (j < world.size()) { Row r = new Row(); r.item = world.get(j++); r.world = true; rows.add(r); }
             }
@@ -63,6 +67,7 @@ public class NewsWidgetService extends RemoteViewsService {
 
         @Override
         public RemoteViews getViewAt(int position) {
+            if (flip) return flipView(position);
             RemoteViews rv = new RemoteViews(ctx.getPackageName(), R.layout.widget_item);
             if (position >= rows.size()) return rv;
             Row r = rows.get(position);
@@ -81,6 +86,30 @@ public class NewsWidgetService extends RemoteViewsService {
             Intent fill = new Intent();
             fill.setData(Uri.parse(n.link));
             rv.setOnClickFillInIntent(R.id.w_row, fill);
+            return rv;
+        }
+
+        /** Một "trang" của widget cuộn: ảnh lớn, tiêu đề đè lên ảnh. */
+        private RemoteViews flipView(int position) {
+            RemoteViews rv = new RemoteViews(ctx.getPackageName(), R.layout.widget_flip_item);
+            if (position >= rows.size()) return rv;
+            Row r = rows.get(position);
+            NewsItem n = r.item;
+            int accent = ctx.getColor(r.world ? R.color.world_flip : R.color.vn_flip);
+            rv.setInt(R.id.f_row, "setBackgroundColor", accent);
+            rv.setTextViewText(R.id.f_title, n.title);
+            rv.setTextViewText(R.id.f_meta, (r.world ? "THẾ GIỚI" : "VIỆT NAM") + " · " + n.source
+                    + "   " + (position + 1) + "/" + rows.size());
+            Bitmap b = ImageLoader.loadSync(n.imageUrl, 480);
+            if (b != null) {
+                rv.setImageViewBitmap(R.id.f_image, b);
+                rv.setViewVisibility(R.id.f_image, View.VISIBLE);
+            } else {
+                rv.setViewVisibility(R.id.f_image, View.GONE);
+            }
+            Intent fill = new Intent();
+            fill.setData(Uri.parse(n.link));
+            rv.setOnClickFillInIntent(R.id.f_row, fill);
             return rv;
         }
 

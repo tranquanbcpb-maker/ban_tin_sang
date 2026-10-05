@@ -112,9 +112,11 @@ public class MainActivity extends Activity {
 
     private void updateWidgets() {
         AppWidgetManager m = AppWidgetManager.getInstance(this);
-        int[] ids = m.getAppWidgetIds(new ComponentName(this, NewsWidgetProvider.class));
-        if (ids.length > 0) {
-            Intent u = new Intent(this, NewsWidgetProvider.class);
+        Class<?>[] providers = {NewsWidgetProvider.class, FlipWidgetProvider.class};
+        for (Class<?> p : providers) {
+            int[] ids = m.getAppWidgetIds(new ComponentName(this, p));
+            if (ids.length == 0) continue;
+            Intent u = new Intent(this, p);
             u.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
             u.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
             sendBroadcast(u);

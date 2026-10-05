@@ -40,6 +40,18 @@
                 android:resource="@xml/news_widget_info" />
         </receiver>
 
+        <receiver
+            android:name=".FlipWidgetProvider"
+            android:exported="true"
+            android:label="@string/flip_widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/flip_widget_info" />
+        </receiver>
+
         <service
             android:name=".NewsWidgetService"
             android:exported="false"
