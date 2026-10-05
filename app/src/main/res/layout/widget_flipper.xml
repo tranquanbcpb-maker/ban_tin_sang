@@ -56,7 +56,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:autoStart="true"
-        android:flipInterval="4000"
-        android:inAnimation="@android:anim/fade_in"
-        android:outAnimation="@android:anim/fade_out" />
+        android:flipInterval="3000"
+        android:inAnimation="@anim/row_in"
+        android:outAnimation="@anim/row_out" />
 </LinearLayout>

@@ -144,15 +144,23 @@ public class WidgetUpdater {
                 item.setOnClickPendingIntent(R.id.f_row, openApp(ctx));
                 rv.addView(R.id.flipper, item);
             }
-            int n = 0;
-            for (Row r : rows) {
-                RemoteViews item = new RemoteViews(ctx.getPackageName(), R.layout.widget_flip_item);
-                item.setTextViewText(R.id.f_meta, meta(r) + "   " + (n + 1) + "/" + rows.size());
-                item.setTextColor(R.id.f_meta, ctx.getColor(r.world ? R.color.world : R.color.vn));
-                item.setTextViewText(R.id.f_title, r.item.title);
-                item.setOnClickPendingIntent(R.id.f_row, openLink(ctx, 5000 + id * 50 + n, r.item.link));
-                rv.addView(R.id.flipper, item);
-                n++;
+            // Mỗi "trang" là một danh sách bắt đầu lệch 1 dòng so với trang trước,
+            // nên khi lật trang trông như cả danh sách trôi lên từng dòng.
+            final int visible = 8;
+            int total = rows.size();
+            for (int start = 0; start < total; start++) {
+                RemoteViews page = new RemoteViews(ctx.getPackageName(), R.layout.widget_flip_page);
+                for (int k = 0; k < Math.min(visible, total); k++) {
+                    int idx = (start + k) % total;
+                    Row r = rows.get(idx);
+                    RemoteViews item = new RemoteViews(ctx.getPackageName(), R.layout.widget_ticker_item);
+                    item.setTextViewText(R.id.w_meta, meta(r) + "   " + (idx + 1) + "/" + total);
+                    item.setTextColor(R.id.w_meta, ctx.getColor(r.world ? R.color.world : R.color.vn));
+                    item.setTextViewText(R.id.w_title, r.item.title);
+                    item.setOnClickPendingIntent(R.id.w_row, openLink(ctx, 5000 + id * 50 + idx, r.item.link));
+                    page.addView(R.id.page, item);
+                }
+                rv.addView(R.id.flipper, page);
             }
             m.updateAppWidget(id, rv);
         }
