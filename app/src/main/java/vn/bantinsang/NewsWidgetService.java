@@ -55,7 +55,7 @@ public class NewsWidgetService extends RemoteViewsService {
             rows.clear();
             // Xen kẽ: 2 tin Việt Nam, 1 tin thế giới.
             int i = 0, j = 0;
-            int max = flip ? 12 : 15;
+            int max = flip ? 20 : 15;
             while (rows.size() < max && (i < vn.size() || j < world.size())) {
                 for (int k = 0; k < 2 && i < vn.size(); k++) { Row r = new Row(); r.item = vn.get(i++); rows.add(r); }
                 if (j < world.size()) { Row r = new Row(); r.item = world.get(j++); r.world = true; rows.add(r); }
@@ -89,24 +89,17 @@ public class NewsWidgetService extends RemoteViewsService {
             return rv;
         }
 
-        /** Một "trang" của widget cuộn: ảnh lớn, tiêu đề đè lên ảnh. */
+        /** Một dòng tin của widget tự cuộn: chỉ chữ, không ảnh. */
         private RemoteViews flipView(int position) {
             RemoteViews rv = new RemoteViews(ctx.getPackageName(), R.layout.widget_flip_item);
             if (position >= rows.size()) return rv;
             Row r = rows.get(position);
             NewsItem n = r.item;
-            int accent = ctx.getColor(r.world ? R.color.world_flip : R.color.vn_flip);
-            rv.setInt(R.id.f_row, "setBackgroundColor", accent);
+            String t = n.timeLabel();
+            rv.setTextViewText(R.id.f_meta, (r.world ? "Thế giới" : "Việt Nam") + " · " + n.source
+                    + (t.isEmpty() ? "" : " · " + t) + "   " + (position + 1) + "/" + rows.size());
+            rv.setTextColor(R.id.f_meta, ctx.getColor(r.world ? R.color.world : R.color.vn));
             rv.setTextViewText(R.id.f_title, n.title);
-            rv.setTextViewText(R.id.f_meta, (r.world ? "THẾ GIỚI" : "VIỆT NAM") + " · " + n.source
-                    + "   " + (position + 1) + "/" + rows.size());
-            Bitmap b = ImageLoader.loadSync(n.imageUrl, 480);
-            if (b != null) {
-                rv.setImageViewBitmap(R.id.f_image, b);
-                rv.setViewVisibility(R.id.f_image, View.VISIBLE);
-            } else {
-                rv.setViewVisibility(R.id.f_image, View.GONE);
-            }
             Intent fill = new Intent();
             fill.setData(Uri.parse(n.link));
             rv.setOnClickFillInIntent(R.id.f_row, fill);
