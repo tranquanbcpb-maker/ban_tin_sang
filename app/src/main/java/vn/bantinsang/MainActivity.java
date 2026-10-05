@@ -89,6 +89,10 @@ public class MainActivity extends Activity {
             List<NewsItem> world = NewsRepository.fetch(NewsRepository.WORLD);
             NewsRepository.save(this, NewsRepository.VN, vn);
             NewsRepository.save(this, NewsRepository.WORLD, world);
+            bg.execute(() -> {
+                WidgetUpdater.cacheThumbs(this);
+                main.post(this::updateWidgets);
+            });
             main.post(() -> {
                 progress.setVisibility(View.GONE);
                 if (!vn.isEmpty()) data.set(NewsRepository.VN, vn);

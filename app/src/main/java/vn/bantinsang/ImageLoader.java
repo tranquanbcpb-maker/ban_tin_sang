@@ -1,5 +1,6 @@
 package vn.bantinsang;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -76,5 +79,41 @@ public class ImageLoader {
         } finally {
             if (c != null) c.disconnect();
         }
+    }
+
+    // ---- Ảnh nhỏ lưu trên máy cho widget ----
+
+    private static File thumbFile(Context ctx, String url) {
+        File dir = new File(ctx.getCacheDir(), "thumbs");
+        if (!dir.exists()) dir.mkdirs();
+        return new File(dir, Integer.toHexString(url.hashCode()) + ".jpg");
+    }
+
+    /** Đọc ảnh nhỏ đã lưu (không dùng mạng, gọi ở đâu cũng được). */
+    public static Bitmap thumbFromDisk(Context ctx, String url) {
+        if (url == null) return null;
+        String key = "disk#" + url;
+        Bitmap b = CACHE.get(key);
+        if (b != null) return b;
+        File f = thumbFile(ctx, url);
+        if (!f.exists()) return null;
+        b = BitmapFactory.decodeFile(f.getAbsolutePath());
+        if (b != null) CACHE.put(key, b);
+        return b;
+    }
+
+    /** Tải ảnh, cắt vuông nhỏ và lưu vào máy (chạy ở luồng nền). */
+    public static void cacheThumb(Context ctx, String url, int size) {
+        if (url == null) return;
+        File f = thumbFile(ctx, url);
+        if (f.exists()) return;
+        Bitmap src = loadSync(url, size * 2);
+        if (src == null) return;
+        int s = Math.min(src.getWidth(), src.getHeight());
+        Bitmap sq = Bitmap.createBitmap(src, (src.getWidth() - s) / 2, (src.getHeight() - s) / 2, s, s);
+        Bitmap out = Bitmap.createScaledBitmap(sq, size, size, true);
+        try (FileOutputStream fo = new FileOutputStream(f)) {
+            out.compress(Bitmap.CompressFormat.JPEG, 82, fo);
+        } catch (Exception ignored) { }
     }
 }

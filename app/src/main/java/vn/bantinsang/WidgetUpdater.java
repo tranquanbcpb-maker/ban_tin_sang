@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -90,6 +91,30 @@ public class WidgetUpdater {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
+    private static final int THUMB = 120;
+
+    private static void setThumb(Context ctx, RemoteViews item, Row r) {
+        Bitmap b = ImageLoader.thumbFromDisk(ctx, r.item.imageUrl);
+        if (b != null) {
+            item.setImageViewBitmap(R.id.w_thumb, b);
+            item.setViewVisibility(R.id.w_thumb, View.VISIBLE);
+        } else {
+            item.setViewVisibility(R.id.w_thumb, View.GONE);
+        }
+    }
+
+    /** Tải sẵn ảnh nhỏ của các tin sẽ hiện trên widget (chạy ở luồng nền). */
+    public static void cacheThumbs(Context ctx) {
+        List<Row> rows = rows(ctx, 20);
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+        for (Row r : rows) {
+            final String url = r.item.imageUrl;
+            pool.execute(() -> ImageLoader.cacheThumb(ctx, url, THUMB));
+        }
+        pool.shutdown();
+        try { pool.awaitTermination(25, java.util.concurrent.TimeUnit.SECONDS); } catch (InterruptedException ignored) { }
+    }
+
     private static String meta(Row r) {
         return (r.world ? "Thế giới" : "Việt Nam") + " · " + r.item.source;
     }
@@ -115,6 +140,7 @@ public class WidgetUpdater {
                 item.setTextViewText(R.id.w_meta, meta(r));
                 item.setTextColor(R.id.w_meta, ctx.getColor(r.world ? R.color.world : R.color.vn));
                 item.setTextViewText(R.id.w_title, r.item.title);
+                setThumb(ctx, item, r);
                 item.setOnClickPendingIntent(R.id.w_row, openLink(ctx, 1000 + id * 50 + n, r.item.link));
                 rv.addView(R.id.widget_rows, item);
                 n++;
@@ -146,7 +172,7 @@ public class WidgetUpdater {
             }
             // Mỗi "trang" là một danh sách bắt đầu lệch 1 dòng so với trang trước,
             // nên khi lật trang trông như cả danh sách trôi lên từng dòng.
-            final int visible = 8;
+            final int visible = 7;
             int total = rows.size();
             for (int start = 0; start < total; start++) {
                 RemoteViews page = new RemoteViews(ctx.getPackageName(), R.layout.widget_flip_page);
@@ -157,6 +183,7 @@ public class WidgetUpdater {
                     item.setTextViewText(R.id.w_meta, meta(r) + "   " + (idx + 1) + "/" + total);
                     item.setTextColor(R.id.w_meta, ctx.getColor(r.world ? R.color.world : R.color.vn));
                     item.setTextViewText(R.id.w_title, r.item.title);
+                    setThumb(ctx, item, r);
                     item.setOnClickPendingIntent(R.id.w_row, openLink(ctx, 5000 + id * 50 + idx, r.item.link));
                     page.addView(R.id.page, item);
                 }
@@ -190,6 +217,8 @@ public class WidgetUpdater {
             } catch (Throwable t) {
                 setStatus(app, "Lỗi: " + t.getClass().getSimpleName());
             } finally {
+                renderAll(app);
+                try { cacheThumbs(app); } catch (Throwable ignored) { }
                 renderAll(app);
                 if (pr != null) pr.finish();
             }
